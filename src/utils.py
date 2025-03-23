@@ -134,11 +134,11 @@ def get_stocks_prices(stocks: list) -> Any:
 
 
 def filter_by_date_transacts(transacts_df: pd.DataFrame, end_date: str) -> Any:
-    """Функция фильтрует транзакции по дате, возвращает датафрейм, вводимый формат даты: '%d.%m.%Y %H:%M:%S'"""
+    """Функция фильтрует транзакции по дате, возвращает датафрейм, вводимый формат даты: '%Y.%m.%d %H:%M:%S'"""
     try:
         logger.info("Функция фильтрации транзакций по дате начала свою работу")
-        target_date = datetime.strptime(end_date, "%d.%m.%Y %H:%M:%S")
-        first_day_of_month = target_date.replace(day=1)
+        target_date = datetime.strptime(end_date, "%Y.%m.%d %H:%M:%S")
+        first_day_of_month = target_date.replace(day=1, hour=0, minute=0, second=0)
         transacts_df["Дата операции"] = pd.to_datetime(transacts_df["Дата операции"], format="%d.%m.%Y %H:%M:%S")
         filtered_df = transacts_df[
             (transacts_df["Дата операции"] >= first_day_of_month) & (transacts_df["Дата операции"] <= target_date)
@@ -158,7 +158,7 @@ def get_top_transacts(filtered_df: pd.DataFrame) -> list[dict]:
         top_5_transactions = filtered_df.nlargest(5, "Сумма операции")
         top_list = [
             {
-                "date": transaction["Дата операции"].strftime("%d.%m.%Y"),
+                "date": transaction["Дата операции"].strftime("%y.%m.%d"),
                 "amount": transaction["Сумма операции"],
                 "category": transaction["Категория"],
                 "description": transaction["Описание"],

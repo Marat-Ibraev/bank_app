@@ -3,6 +3,8 @@ import os
 from functools import wraps
 from typing import Any, Callable, Optional
 
+import pandas as pd
+
 logs_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "logs")
 if not os.path.exists(logs_dir):
     os.makedirs(logs_dir)
@@ -34,8 +36,14 @@ def report(filename: Optional[str] = None) -> Callable:
                     os.makedirs(report_dir)
             try:
                 logger.info("Вызов функции внутри декоратора")
-                result = func(*args, **kwargs)
-                report_message = f"Результат функции {func.__name__}: {result}\n"
+                result = func(*args, **kwargs)  # Передаем аргументы функции
+                if isinstance(result, pd.DataFrame):
+                    # Преобразуем DataFrame в JSON строку
+                    json_result = result.to_json(orient="records", force_ascii=False, indent=4)
+                    report_message = f"Результат функции {func.__name__}: {json_result}\n"
+                else:
+                    report_message = f"Результат функции {func.__name__}: {result}\n"
+
                 if filename:
                     with open(filename, "w", encoding="utf-8") as file:
                         file.write(report_message)

@@ -7,8 +7,10 @@ import pytest
 from dotenv import load_dotenv
 from pandas._libs.tslibs.timestamps import Timestamp
 
-from src.utils import (filter_by_date_transacts, filter_transacts_by_card_number, get_conversion, get_stocks_prices,
-                       get_top_transacts, read_file_xlsx, read_greeting)
+from src.utils import (filter_by_date_transacts,
+                       filter_transacts_by_card_number, get_conversion,
+                       get_stocks_prices, get_top_transacts, read_file_xlsx,
+                       read_greeting)
 
 load_dotenv()
 

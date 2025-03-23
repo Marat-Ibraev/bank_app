@@ -39,7 +39,7 @@ def main() -> None:
     if menu == "1":
         logger.info("Выбрана категория Главная страница для отображения")
         print("Главная страница")
-        input_date = input("Введите дату в формате: 'ДД.ММ.ГГГГ ЧЧ:ММ:СС'\n")
+        input_date = input("Введите дату в формате: 'ГГГГ.ММ.ДД ЧЧ:ММ:СС'\n")
         print(get_home_page_json_response(input_date))
         logger.info("Вывод результата программы")
     elif menu == "2":

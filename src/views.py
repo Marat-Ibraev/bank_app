@@ -2,8 +2,10 @@ import json
 import logging
 import os
 
-from src.utils import (create_json_response, filter_by_date_transacts, filter_transacts_by_card_number, get_conversion,
-                       get_stocks_prices, get_top_transacts, read_file_xlsx, read_greeting)
+from src.utils import (create_json_response, filter_by_date_transacts,
+                       filter_transacts_by_card_number, get_conversion,
+                       get_stocks_prices, get_top_transacts, read_file_xlsx,
+                       read_greeting)
 
 logs_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "logs")
 if not os.path.exists(logs_dir):
@@ -31,8 +33,8 @@ def get_home_page_json_response(date_str: str) -> str | list:
         df_transacts = read_file_xlsx("../data/operations.xlsx")
 
         gritting = read_greeting()
-        cart_info = filter_transacts_by_card_number(df_transacts)
         sorted_df = filter_by_date_transacts(df_transacts, date_str)
+        cart_info = filter_transacts_by_card_number(df_transacts)
         top_transacts = get_top_transacts(sorted_df)
         currency_func = get_conversion(user_currencies)
         stocks_func = get_stocks_prices(user_stocks)
@@ -54,6 +56,6 @@ def get_home_page_json_response(date_str: str) -> str | list:
 
 
 # Пример использования функции
-if __name__ == "__main__":
-    user_input = "31.12.2021 16:44:00"
-    print(get_home_page_json_response(user_input))
+# if __name__ == "__main__":
+#     user_input = "2021.12.31 16:44:00"
+#     print(get_home_page_json_response(user_input))

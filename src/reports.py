@@ -1,10 +1,10 @@
-import json
 import logging
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 
 import pandas as pd
+from dateutil.relativedelta import relativedelta
 
 from src.decorators import report
 from src.utils import read_file_xlsx
@@ -22,7 +22,7 @@ logger.setLevel(logging.DEBUG)
 
 
 @report("../reports/report.log")
-def spending_by_category(transactions: pd.DataFrame, category: str, date: Optional[str] = None) -> str:
+def spending_by_category(transactions: pd.DataFrame, category: str, date: Optional[str] = None) -> pd.DataFrame:
     """Функция возвращает траты по заданной категории за последние три месяца (от переданной даты)"""
     logger.info("Начало работы функции траты по категориям")
     category = category.capitalize()
@@ -34,7 +34,7 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date: Option
     transactions["Дата операции"] = transactions["Дата операции"].apply(
         lambda x: datetime.strptime(x, "%d.%m.%Y %H:%M:%S") if pd.notnull(x) else None
     )
-    three_month_ago = input_date - timedelta(days=90)
+    three_month_ago = input_date - relativedelta(months=3)
     filtered_df = transactions[
         (transactions["Категория"] == category)
         & (transactions["Дата операции"] >= three_month_ago)
@@ -49,7 +49,7 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date: Option
         final_list.append(item)
     logger.info(f"Формирование итогового списка транзакций всего: {len(final_list)} транзакций")
     logger.info("Завершение работы функции. Формирование итоговой json строки")
-    return json.dumps(final_list, ensure_ascii=False, indent=4)
+    return filtered_df
 
 
 if __name__ == "__main__":  # Пример использования
